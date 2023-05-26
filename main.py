@@ -43,13 +43,29 @@ def validar():
 def graficar():
     try:
         temperatura = float(entrada2.get())
-        graficador.graficarDatos(temperatura)
+        presion = float(entrada1.get())
+        indexPres = buscarPresion()
+        temperaturaPres= control.tomarTemperaturaPresion(indexPres)
+        tempAprox, tempPrev, index = buscarTemperatura()
+        vf=control.calcularVolumenesLiq(temperatura,tempAprox,tempPrev,index)
+        vg=control.calcularVolumenesVap(temperatura,tempAprox,tempPrev,index)
+        graficador.graficarDatos(temperatura, vf, vg, temperaturaPres, presion)
     except ValueError:
         messagebox.showerror("Error", "Ingrese una temperatura válida")
 
 def buscarTemperatura():
-    temperatura= float(entrada2.get())
-    control.interpolarTemperaturas(temperatura)
+    temperatura = float(entrada2.get())
+    temperaturaAprox, temperaturaPrevia, index = control.interpolarTemperaturas(temperatura)
+    
+    messagebox.showinfo("Resultados", f"Temperatura aproximada encontrada: {temperaturaAprox}\nTemperatura previa aproximada encontrada: {temperaturaPrevia}")
+    
+    return temperaturaAprox, temperaturaPrevia, index
+
+def buscarPresion():
+    presion=float(entrada1.get())
+    index = control.interpolarPresiones(presion)
+
+    return index
 
 #frame contenido en la raíz
 frame=Frame(raiz)
@@ -58,7 +74,7 @@ frame.pack(padx=40, pady=40)
 
 titulo=Label(frame, text='FASES DEL AGUA - TERMODINÁMICA')
 titulo.grid(row="0", column="0", columnspan=2, padx=10, pady=10)
-titulo.config(bg="white", border=5)
+titulo.config(bg="blue", border=5)
 
 #subtítulos y entradas de información
 label1=Label(frame, text='Presión 1 (kPa)')
