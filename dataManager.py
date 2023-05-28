@@ -49,7 +49,7 @@ class DataManager:
 
         return temp_igual_o_aprox, temp_previa, index
 
-     def calcularVolumenesLiq(self, temperatura, temperaturaAprox, temperaturaPrev, index):
+     def calcularVolumenesLiqSat(self, temperatura, temperaturaAprox, temperaturaPrev, index):
         volValues = [fila[2] for fila in self.matriz]
 
         volumeAprox=volValues[index]
@@ -61,7 +61,7 @@ class DataManager:
             volumeF = volValues[index]
         return volumeF
      
-     def calcularVolumenesVap(self, temperatura, temperaturaAprox, temperaturaPrev, index):
+     def calcularVolumenesVapSat(self, temperatura, temperaturaAprox, temperaturaPrev, index):
         volValues = [fila[3] for fila in self.matriz]
 
         volumeAprox=volValues[index]
@@ -95,12 +95,35 @@ class DataManager:
                 if index > 0:
                     PresionPrev= presValues[index - 1]
             
-            return  index
+            return  PresionAprox, PresionPrev,index
          
      def tomarTemperaturaPresion(self, index):
          tempValues = [fila[0] for fila in self.matriz]
 
          temperatura= tempValues[index]
          return temperatura
+     
+     def calcularVolumenesLiqPres(self, presion, presionAprox, presionPrev, index):
+        volValues = [fila[2] for fila in self.matriz]
 
+        volumeAprox=volValues[index]
+        volumePrev= volValues[index-1]
+        if presionPrev is not None:
+            m=(volumeAprox-volumePrev)/(presionAprox-presionPrev)
+            volumeF= m*(presion-presionPrev)+volumePrev
+        else:
+            volumeF = volValues[index]
+        return volumeF
 
+     def calcularVolumenesVapPres(self, presion, presionAprox, presionPrev, index):
+        volValues = [fila[3] for fila in self.matriz]
+
+        volumeAprox=volValues[index]
+        volumePrev= volValues[index-1]
+        if presionPrev is not None:
+            m=(volumeAprox-volumePrev)/(presionAprox-presionPrev)
+            volumeGPres= m*(presion-presionPrev)+volumePrev
+        else:
+            volumeGPres=volValues[index]
+        return volumeGPres
+     
