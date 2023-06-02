@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import messagebox
 from dataManager import TableManager
 from graficas import GraficadorTablas
+from guardarDatos import GuardarDatos
 from dataManager import DataManager
 
 
@@ -18,6 +19,7 @@ data=TableManager(file)
 matrizDatos = data.crearMatrizNum()
 graficador = GraficadorTablas(matrizDatos)
 control = DataManager(matrizDatos)
+
 #graficador.graficarDatos()
 
 #definiendo la raíz
@@ -76,6 +78,19 @@ def buscarPresion():
 def buscarTabla():
     Uf, Ug, hf, hg, sf, sg = control.buscarEstadoSaturacion()
 
+def guardarDatos():
+    
+    temperatura = float(entrada2.get())
+    presion = float(entrada1.get())
+    historial = GuardarDatos(presion,temperatura)
+    historial.guardarDatos()
+
+def guardarGrafico():
+    nombre= str(entrada4.get())
+    graficador.guardarGrafico(nombre)
+
+
+
 #frame contenido en la raíz
 frame=Frame(raiz)
 frame.config(bg="lightblue", width="1000", height="1200")
@@ -111,14 +126,27 @@ entrada3.grid(row="3", column="2", pady=5)
 entrada3.config(bg="#2E49AF", highlightthickness=4,highlightbackground="#021663", highlightcolor="#021663", fg="white",
     insertbackground="white")
 
+label4=Label(frame, text='Nombre Gráfica')
+label4.grid(row="6", column="0", pady=5, sticky="e")
+label4.config(bg="#021663", fg="white", border=5)
+entrada4=Entry(frame)
+entrada4.grid(row="6", column="2", pady=5)
+entrada4.config(bg="#2E49AF", highlightthickness=4,highlightbackground="#021663", highlightcolor="#021663", fg="white",
+    insertbackground="white")
+
 # Botón para graficar
 boton = Button(frame, text='Graficar', command=graficar)
 boton.grid(row="10", column="15", pady=10)
 
 
 # Botón para interpolar temperatura
-boton1 = Button(frame, text='Buscar', command=buscarTabla)
-boton1.grid(row="3", column="1", pady=10)
+boton1 = Button(frame, text='Guardar Registro', command=guardarDatos)
+boton1.grid(row="9", column="1", pady=10)
+
+#boton guardar grafica
+
+boton2= Button(frame, text='Guardar grafica', command=guardarGrafico)
+boton2.grid(row='6', column='1')
 #label para el mensaje de error
 label3=Label(frame, text='')
 label3.grid(row="8", column="4", columnspan=2, pady=15)

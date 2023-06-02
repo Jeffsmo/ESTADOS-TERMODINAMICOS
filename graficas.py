@@ -118,3 +118,5 @@ class GraficadorTablas:
             plt.plot(x2, y2, color='purple', linestyle='-')
             plt.plot(x3, y3, color='purple', linestyle='-', label=('Presion = '+ str(presion)+' kPa'))
             
+    def guardarGrafico(self, nombre):
+        plt.savefig(nombre+'.jpg', format='jpg')
