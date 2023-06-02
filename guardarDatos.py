@@ -3,11 +3,20 @@ class GuardarDatos:
         self.presion = presion
         self.temperatura = temperatura
 
-    def guardarDatos(self):
+    def guardarDatos(self, date, nombreFigura):
         try:
-            # Abrir el archivo en modo escritura ('w')
-            with open('datos.txt', 'w') as archivo:
-                # Escribir los datos de presión y temperatura en el archivo
+
+            contenido_previo = ''
+            try:
+                with open('Registro.txt', 'r') as archivo_previo:
+                    contenido_previo = archivo_previo.read()
+            except FileNotFoundError:
+                pass
+
+            with open('Registro.txt', 'w') as archivo:
+                archivo.write(contenido_previo)
+                archivo.write(f'Nombre de la Figura: {nombreFigura}\n')
+                archivo.write(f'Fecha de Registro: {date}\n')
                 archivo.write(f'Presión: {self.presion}\n')
                 archivo.write(f'Temperatura: {self.temperatura}\n')
             print('Datos guardados correctamente.')

@@ -1,2 +1,0 @@
-Presión: 100.0
-Temperatura: 250.0

@@ -10,6 +10,7 @@ from dataManager import TableManager
 from graficas import GraficadorTablas
 from guardarDatos import GuardarDatos
 from dataManager import DataManager
+import datetime
 
 
 file='Tablas Termodinamica.csv'
@@ -79,15 +80,39 @@ def buscarTabla():
     Uf, Ug, hf, hg, sf, sg = control.buscarEstadoSaturacion()
 
 def guardarDatos():
-    
-    temperatura = float(entrada2.get())
-    presion = float(entrada1.get())
-    historial = GuardarDatos(presion,temperatura)
-    historial.guardarDatos()
+    try:
+        nombre = str(entrada4.get())
+        temperatura = float(entrada2.get())
+        presion = float(entrada1.get())
+        historial = GuardarDatos(presion,temperatura)
+        date = datetime.datetime.now()
+        historial.guardarDatos(date, nombre)
+        messagebox.showinfo("Guardar","Datos guardados exitosamente")
+    except ValueError:
+        messagebox.showerror("Error", "Error al escribir registro")
+
+
 
 def guardarGrafico():
-    nombre= str(entrada4.get())
-    graficador.guardarGrafico(nombre)
+    try:
+        nombre= str(entrada4.get())
+        #graficador.guardarGrafico(nombre)
+        temperatura = float(entrada2.get())
+        presion = float(entrada1.get())
+        escala = float(entrada3.get())
+        presionAprox, presionPrev, indexPres = buscarPresion()
+        temperaturaPres= control.tomarTemperaturaPresion(indexPres)
+        vfPres = control.calcularVolumenesLiqPres(presion, presionAprox, presionPrev, indexPres)
+        vgPres = control.calcularVolumenesVapPres(presion, presionAprox, presionPrev, indexPres)
+        tempAprox, tempPrev, index = buscarTemperatura()
+        vf=control.calcularVolumenesLiqSat(temperatura,tempAprox,tempPrev,index)
+        vg=control.calcularVolumenesVapSat(temperatura,tempAprox,tempPrev,index)
+        graficador.graficarLineasDePresion(vfPres,vgPres,temperaturaPres,escala, presion)
+        #graficador.graficarLineasDePresion(vf,vg,temperatura,escala,index)
+        graficador.guardarGrafico(temperatura, vf, vg, temperaturaPres, presion, escala, index, nombre)
+        messagebox.showinfo("Guardar", "Figura guardada con éxito ")
+    except ValueError:
+        messagebox.showerror("Error", "Error al guardar archivo")
 
 
 
